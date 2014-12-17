@@ -230,12 +230,13 @@ symrec *createSym(char const * varName, type * type){
 }
 
 symrec * newRecordTable(){
-    symrec * res = (symrec*)malloc(sizeof(symrec));
-    //symrec * res = NULL;
+    //symrec * res = (symrec*)malloc(sizeof(symrec));
+    symrec * res = NULL;
     //shall we place some already declared variable here
     //some reserved keyword or preceding declared var?
     //
     //
+
 
     return res;
 }

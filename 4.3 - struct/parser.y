@@ -178,12 +178,12 @@ D: 	 T VAR SEMICOLON D 				{
 										}
 									}
 	| T VAR SEMICOLON				{
-										if(inside_record){
-												if(tempTable == NULL){
+                                        if(inside_record){
+                                            if(tempTable == NULL){
                                                 //printf("HELP ME"); //questo printf fa andare tutto il programma
-												//tempTable = newRecordTable(); // ERROR int tempTable
-                                                tempTable = NULL;
-											}
+                                                tempTable = newRecordTable(); // ERROR int tempTable
+                                                //tempTable = NULL;
+                                            }
 											$2 = createSymStruct($2->name,$1,&tempTable);
 										}else{
 											$2 = createSym($2->name,$1);
