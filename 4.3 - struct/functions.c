@@ -15,7 +15,7 @@ putsym (char const * identifier, type * tipo)
   sym_table = ptr;
   return ptr;
 }
-symrec 
+symrec
 *putsymStruct(char const * identifier, type * tipo, symrec ** tabella){
   symrec *ptr = (symrec *) malloc (sizeof (symrec));
   ptr->name = (char *) malloc (strlen (identifier) + 1);
@@ -38,7 +38,7 @@ getsym (char const * identifier)
   }
   return NULL;
 }
-symrec 
+symrec
 *getsymStruct(char const *identifier, symrec * tabella){
   symrec *ptr;
   for (ptr = tabella; ptr != (symrec *) 0;
@@ -57,7 +57,6 @@ int updated = 0;
   for (ptr = sym_table; ptr != (symrec *) 0;
        ptr = (symrec *)ptr->next){
     if (strcmp (ptr->name, var->name) == 0){
-        ptr = var;
         updated = 1;
         break;
     }
@@ -104,7 +103,7 @@ int* arrayElement(array * a, ref * r){
         int accessedItem = r->n;
         //controllo che il prossimo elemento non sia la fine dell'array
         return arrayElement((a->value.a + accessedItem),r->next);
-        
+
     }
     else{
         //devo restituire la locazione
@@ -146,8 +145,7 @@ int checkTypes(symrec * variable){
 
 int Revaluate(LRhand * expr){
     if(strcmp(expr->name, "VAR") == 0){
-        symrec * var = (symrec*)malloc(sizeof(symrec));
-        var = expr->value.rec;
+        symrec * var = expr->value.rec;
         if(var->ref == NULL){
             return var->tipo->value.b->value.i;
         }
@@ -168,13 +166,13 @@ int Revaluate(LRhand * expr){
         //as name, notice that we can not nest in this case structs calling structs
         //our structures are far from being simple, with a more simple architecture
         //we could play around with this a bit
-        
+
         symrec s = *getsymStruct(expr->member.name->name,
                                 expr->value.rec->tipo->value.r->tabella);
         //suppose we do not declare array, even if possible
         //so that we have only basic types eg int
         return s.tipo->value.b->value.i;
-        
+
     }
     printf("%s %s\n", "Right hand operator\nnot able to evaluate expression", expr->name);
     exit(0);
@@ -183,8 +181,7 @@ int Revaluate(LRhand * expr){
 int * Levaluate(LRhand * expr){
     if(strcmp(expr->name, "VAR") == 0){
         //i controlli sull'accesso all'array o alla variabile sono gia stati fatti
-        symrec * var = (symrec*)malloc(sizeof(symrec));
-        var = expr->value.rec;
+        symrec * var = expr->value.rec;
         if(var->ref == NULL){
             return &(var->tipo->value.b->value.i);
         }
@@ -197,11 +194,11 @@ int * Levaluate(LRhand * expr){
         return 0;
     }
     if(strcmp(expr->name, "STRUCT")== 0){
-        
+
         symrec s = *getsymStruct(expr->member.name->name,
                                  expr->value.rec->tipo->value.r->tabella);
         return &(s.tipo->value.b->value.i);
-        
+
     }
 
     printf("%s %s\n", "Left hand operator\nnot able to evaluate expression", expr->name);
@@ -227,6 +224,7 @@ symrec *createSym(char const * varName, type * type){
     if (s == 0){
         s = putsym(variableName, NULL);
     }
+    free(variableName);
     s->tipo = type;
     return s;
 }
@@ -235,11 +233,14 @@ symrec * newRecordTable(){
     symrec * res;
     //shall we place some already declared variable here
     //some reserved keyword or preceding declared var?
+    //
+
+    //FIXME: wtf - returning garbage?
     return res;
 }
 symrec *createSymStruct(char const * varName, type * type, symrec ** tabella){
-    
-    
+
+
     symrec * s;
     //printf("creating new varibale for struct\n");
     char * variableName = malloc(strlen(varName)+1);
@@ -249,8 +250,9 @@ symrec *createSymStruct(char const * varName, type * type, symrec ** tabella){
         //printf("putting symbol into table\n");
         s = putsymStruct(variableName, NULL, &(*tabella));
     }
+    free(variableName);
     s->tipo = type;
-    
+
     return s;
 }
 

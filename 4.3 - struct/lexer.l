@@ -19,8 +19,8 @@ int						{
 									basic *b = malloc(sizeof(basic));
 									b->name = "INTEGER";
 									*((basic**)(&yylval)) = b;
-									return INT;	
-						}					
+									return INT;
+						}
 float					{
 									basic *b = malloc(sizeof(basic));
 									b->name = "FLOAT";
@@ -53,11 +53,11 @@ print 					{			return PRINT;}
 
 [ \t]					{    yylloc.last_column++;}
 
-[-+/*^=()]				{	
+[-+/*^=()]				{
 							yylloc.last_column++;
 							return *yytext;
 						}
-\n 						{	
+\n 						{
 							yylloc.last_line++;
 							yylloc.last_column = 0;
 						}
