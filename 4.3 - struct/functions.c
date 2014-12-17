@@ -17,13 +17,13 @@ putsym (char const * identifier, type * tipo)
 }
 symrec
 *putsymStruct(char const * identifier, type * tipo, symrec ** tabella){
-  symrec *ptr = (symrec *) malloc (sizeof (symrec));
-  ptr->name = (char *) malloc (strlen (identifier) + 1);
-  strcpy (ptr->name,identifier);
-  ptr->tipo = tipo;
+    symrec *ptr = (symrec *) malloc (sizeof (symrec));
+    ptr->name = (char *) malloc (strlen (identifier) + 1);
+    strcpy (ptr->name,identifier);
+    ptr->tipo = tipo;
     ptr->next = *tabella;
     *tabella = ptr;
-  return ptr;
+    return ptr;
 }
 
 
@@ -230,12 +230,13 @@ symrec *createSym(char const * varName, type * type){
 }
 
 symrec * newRecordTable(){
-    symrec * res;
+    symrec * res = (symrec*)malloc(sizeof(symrec));
+    //symrec * res = NULL;
     //shall we place some already declared variable here
     //some reserved keyword or preceding declared var?
     //
+    //
 
-    //FIXME: wtf - returning garbage?
     return res;
 }
 symrec *createSymStruct(char const * varName, type * type, symrec ** tabella){

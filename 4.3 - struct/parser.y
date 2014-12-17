@@ -31,7 +31,7 @@
 %start P
 
 %token INT FLOAT
-%token <dbl>  NUM 
+%token <dbl>  NUM
 %token <srec> VAR
 %nonassoc PRINT
 %nonassoc SEMICOLON LBRACK RBRACK LCURLY RCURLY RECORD DOT
@@ -63,10 +63,9 @@ cmd_list:		cmd SEMICOLON
 				;
 cmd:		 		/*empty*/
 					| L '=' R  {
-											int n = $3->value.num;
 											int res = assignment($1,$3);
 											if(res == 0){
-												printf("ASsignment exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);			
+												printf("ASsignment exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);
 												exit(0);
 											}
 										}
@@ -78,10 +77,10 @@ cmd:		 		/*empty*/
 	 				;
 
 expr: 			R 					{
-										$$ = Revaluate($1);	
+										$$ = Revaluate($1);
 									}
 				;
-L: 				VAR Cvar			{	
+L: 				VAR Cvar			{
 
 										if($2 != NULL){
 											$1->ref = (ref*)malloc(sizeof(ref));
@@ -92,7 +91,7 @@ L: 				VAR Cvar			{
 										// sempre che quella variabile sia un array
 										int res = checkTypes($1);
 										if(res == 0){
-											printf("Lvalue evaluation exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);			
+											printf("Lvalue evaluation exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);
 											exit(0);
 										}
 										LRhand *L = (LRhand*)malloc(sizeof(LRhand));
@@ -100,10 +99,10 @@ L: 				VAR Cvar			{
 										L->value.rec = $1;
 										$$ = L;
 									}
-				| VAR DOT VAR 		{	
+				| VAR DOT VAR 		{
 										int res = validateStructAccess($1->name, $3->name);
 										if(res == 0){
-											printf("Undefined Sruct access exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);			
+											printf("Undefined Sruct access exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);
 											exit(0);
 										}
 										LRhand *l = (LRhand*)malloc(sizeof(LRhand));
@@ -111,10 +110,10 @@ L: 				VAR Cvar			{
 										l->value.rec = $1;
 										l->member.name = $3;
 										$$ = l;
-									}									
-				
+									}
+
 				;
-R :				VAR Cvar 			{	
+R :				VAR Cvar 			{
 										if($2 == NULL){
 
 											$1->ref = NULL;
@@ -125,17 +124,17 @@ R :				VAR Cvar 			{
 										}
 										int res = checkTypes($1);
 										if(res == 0){
-											printf("Rvalue evaluation exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);										
+											printf("Rvalue evaluation exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);
 											exit(0);
 										}
 										LRhand *R = (LRhand*)malloc(sizeof(LRhand));
 										R->name = "VAR";
 										R->value.rec = $1;
-										$$ = R;	
-	
-										
+										$$ = R;
+
+
 									}
-				| NUM				{ 	
+				| NUM				{
 										$<dbl>$ = $1; // default we can skip it
 										LRhand *R = (LRhand*)malloc(sizeof(LRhand));
 										R->name = "NUM";
@@ -143,10 +142,10 @@ R :				VAR Cvar 			{
 										int n = R->value.num;
 										$$ = R;
 										}
-				| VAR DOT VAR 		{	
+				| VAR DOT VAR 		{
 										int res = validateStructAccess($1->name, $3->name);
 										if(res == 0){
-											printf("Undefined Sruct access exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);			
+											printf("Undefined Sruct access exception.\nPlease check the code at line %d column %d\n", @2.first_line,@2.first_column);
 											exit(0);
 										}
 										LRhand *r = (LRhand*)malloc(sizeof(LRhand));
@@ -157,10 +156,10 @@ R :				VAR Cvar 			{
 									}
 				;
 
-Cvar: 	/*empty*/					{ 	
+Cvar: 	/*empty*/					{
 										$$ = NULL;
 									}
-		| LBRACK NUM RBRACK Cvar 	{ 	
+		| LBRACK NUM RBRACK Cvar 	{
 										ref *res = (ref*)malloc(sizeof(ref));
 										//perform some check on i - our input have just test purposes
 										int i = $2;
@@ -169,20 +168,21 @@ Cvar: 	/*empty*/					{
 										$$ = res;
 									}
 		;
-D: 	 T VAR SEMICOLON D 				{	
+D: 	 T VAR SEMICOLON D 				{
 										if(inside_record){
 											//se arrivo qui ho gia inizializzato tempTable
 											createSymStruct($2->name,$1,&tempTable);
 										}else{
-										
+
 											$2 = createSym($2->name,$1);
 										}
 									}
-	| T VAR SEMICOLON				{	
+	| T VAR SEMICOLON				{
 										if(inside_record){
 												if(tempTable == NULL){
-													printf(""); //questo printf fa andare tutto il programma
-												tempTable = newRecordTable();
+                                                //printf("HELP ME"); //questo printf fa andare tutto il programma
+												//tempTable = newRecordTable(); // ERROR int tempTable
+                                                tempTable = NULL;
 											}
 											$2 = createSymStruct($2->name,$1,&tempTable);
 										}else{
@@ -190,7 +190,7 @@ D: 	 T VAR SEMICOLON D 				{
 										}
 
 									}
-	
+
 	;
 
 
@@ -207,7 +207,7 @@ T:	B								{
 	| RECORD 						{
 										inside_record = 1;
 									}
-			LCURLY D RCURLY			{ 
+			LCURLY D RCURLY			{
 										type * t = (type*)malloc(sizeof(type));
 										t->name = "STRUCT";
 										record * r = (record*)malloc(sizeof(record));
@@ -284,7 +284,7 @@ array * composeArray(char const * tipo, int larghezza, array *a, basic *b){
 	if(strcmp("ARRAY",res->name) == 0){
 		// sto processando un array
 		res->value.a = malloc(res->width*sizeof(array));
-		for(int i = 0; i < larghezza; i++){			
+		for(int i = 0; i < larghezza; i++){
 			*((res->value.a)+i) = *newArray(a);
 		}
 	}
@@ -316,7 +316,7 @@ type * composeType(array * a){
 		res->name = malloc(sizeof(a->name));
 		strcpy(res->name, a->name);
 	}
-	
+
 	return res;
 }
 

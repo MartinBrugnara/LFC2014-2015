@@ -16,13 +16,13 @@
 					    	return NUM;
 						}
 int						{
-									basic *b = malloc(sizeof(basic));
+									basic *b = malloc(sizeof(int));
 									b->name = "INTEGER";
 									*((basic**)(&yylval)) = b;
 									return INT;
 						}
 float					{
-									basic *b = malloc(sizeof(basic));
+									basic *b = malloc(sizeof(float));
 									b->name = "FLOAT";
 									*((basic**)&yylval) = b;
 									return FLOAT;
@@ -47,6 +47,7 @@ print 					{			return PRINT;}
 								s->name = (char *) malloc(strlen(yytext));
 								strcpy (s->name,yytext);
 							}
+                            free(variableName);
 							*((symrec**)&yylval) = s; //just saying that yylval is a symrec and a pointer to s
 							return VAR;
 						}
